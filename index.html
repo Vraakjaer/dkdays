@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+	<link href="bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+<h1>Ferie i Danmark</h1>
+<table class="table table-bordered">
+<thead>
+<tr>
+	<th>Start</th>
+	<th>Slut</th>
+	<th>Dage *</th>
+	<th>Sidste 12 mndr **</th>
+</tr>
+</thead>
+<tbody>
+<script>
+
+var i, a, e, j, n, s, v = [
+'2013-12-02:2014-01-10'
+,'2014-04-23:2014-07-07'
+,'2014-08-11:2014-10-12'
+,'2014-12-08:2015-01-10'
+,'2015-04-20:2015-06-14'
+,'2015-07-20:2015-09-30'
+,'2015-12-14:2016-01-23'
+,'2016-04-18:2016-06-18'
+,'2016-07-13:2016-09-17'
+,'2016-12-12:2017-01-15'
+,'2017-04-09:2017-06-11'
+,'2017-07-31:2017-10-02'
+,'2017-12-11:2018-01-14'
+,'2018-04-09:2018-06-15'
+,'2018-07-30:2018-09-28'
+,'2018-12-10:2019-01-18'
+];
+
+daysDiff = function(ed, sd) {
+	var t = Math.abs(ed.getTime() - sd.getTime());
+	return Math.ceil(t / (1000 * 3600 * 24));
+};
+
+daysLastYear = function(ed) {
+	var sd = new Date(ed);
+	sd.setMonth(sd.getMonth()-12);
+	//console.log('---');
+	//console.log('start',sd);
+	//console.log('slut',ed);
+	n = 0;
+	for(j=0;j<v.length;j++) {
+		var a = v[j].split(':'),
+			s = new Date(a[0]),
+			e = new Date(a[1]);
+		//console.log('s',s);
+		//console.log('e',e);
+		if(s >= ed) {
+			//console.log(s+' >= '+ed,'n='+n);
+			break;
+		} else if(e >= ed) {
+			n += daysDiff(ed,s);
+			//console.log(e+' >= '+ed,'n='+n);
+			break;
+		} else if(n > 0) {
+			n += daysDiff(e,s);
+			//console.log('n > 0','n='+n);
+		} else if(e >= sd) {
+			//console.log(e+' >= '+sd,'wrap-it-up');
+			if(sd > s) {
+				n += daysDiff(e,sd);
+				//console.log(sd+' > '+s,'n='+n);
+			} else {
+				n += daysDiff(e,s);
+				//console.log('n='+n);
+			}
+		}
+	}
+	return n;
+};
+
+for(i=0;i<v.length;i++) {
+	a = v[i].split(':');
+	s = new Date(a[0]);
+	e = new Date(a[1]);
+	document.write('<tr></tr><td>'+a[0]+'</td><td>'+a[1]+'</td><td>'+daysDiff(e,s)+'</td><td>'+daysLastYear(e)+'</td></tr>');
+}
+</script>
+</tbody>
+</table>
+<p>* Max 90 dage i Danmark ad gangen.</p>
+<p>** Ved feriens afslutning tæller vi hvor mange dage der er brugt i Danmark fra samme dato året før.</p>
+</div>
+
+</body>
+</html>
